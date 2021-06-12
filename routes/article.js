@@ -70,8 +70,8 @@ routes.get("/all", async (req, res) => {
    */
     var sql = ` select A.article_id,A.title,A.body,A.author_id,Auth.name,Auth.job_title,COUNT(L.article_id) as likes
                 from articles as A
-                inner join likes as L on L.article_id = A.article_id
-                join authors as Auth on Auth.author_id = A.author_id
+                left join likes as L on L.article_id = A.article_id
+                left join authors as Auth on Auth.author_id = A.author_id
                 group by A.article_id
                 order by likes DESC
               `
@@ -287,8 +287,8 @@ routes.get("/search/:searchquery", async (req, res) => {
     const sql = `
                 select A.article_id,A.title,A.body,A.author_id,Auth.name,Auth.job_title,COUNT(L.article_id) as likes,MATCH (title,body) AGAINST ('${req.params.searchquery}') as score 
                 from articles as A
-                inner join likes as L on L.article_id = A.article_id
-                join authors as Auth on Auth.author_id = A.author_id
+                left join likes as L on L.article_id = A.article_id
+                left join authors as Auth on Auth.author_id = A.author_id
                 where  MATCH(A.title,A.body) AGAINST ('${req.params.searchquery}')
                 group by A.article_id
                 order by score DESC,likes DESC;
@@ -408,8 +408,8 @@ routes.get("/search/:searchquery", async (req, res) => {
     const sql =  `
                   select A.article_id,A.title,A.body,A.author_id,Auth.name,Auth.job_title,COUNT(L.article_id) as likes
                   from articles as A
-                  inner join likes as L on L.article_id = A.article_id
-                  join authors as Auth on Auth.author_id = A.author_id
+                  left join likes as L on L.article_id = A.article_id
+                  left join authors as Auth on Auth.author_id = A.author_id
                   where A.article_id='${req.params.id}'
                   group by A.article_id
                 `
